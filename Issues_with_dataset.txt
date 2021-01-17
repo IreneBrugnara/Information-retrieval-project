@@ -1,0 +1,42 @@
+
+ISSUES WITH THE DATASET
+I found some issues with the dataset, they are listed here.
+
+
+The articles in the dataset have associated numbers. They go from 1 to 2004, but documents from
+1993 to 1997 are missing (see below), anyway all these numbers are unique.
+I decided to use as docIDs these numbers.
+
+
+The end of the file LISA1.501 (after document 1992) is messed up:
+1) documents from 1993 to 1997 are missing, but they don't appear in relevance judgements so it's not a problem
+2) documents from 1998 to 2001 are repeated, but it's not a problem because in the function read_LISA_corpus()
+   I use a dictionary to store the documents and so they are simply overwritten, not duplicated
+3) there is an error in the lines from 5541 to 5548: an abstract without number and title, I simply ignore it
+
+
+There are 128 documents with a wrong split between title and abstract: some letters which should be at the
+beginning of the abstract are instead at the end of the title. Here is an example:
+********************************************
+Document 4068
+YEARS OF THE DEPARTMENT OF LIBRARY SCIENCE (1956-81).WOR
+     
+K DONE BY THE DEPARTMENT IS REVIEWED, INFORMATION CONCERNING THE FACULTY
+MEMBERS IS GIVEN BRIEFLY AND A BIBLIOGRAPHY OF PUBLICATIONS PRODUCED BY THE
+DEPARTMENT IS PRESENTED.
+********************************************
+I wrote a function fix_split() to detect the problematic documents with a regex and fix the problem
+automatically.
+
+
+Some documents have an abstract which actually says that the abstract is missing or refer to
+another document, for example:
+"NO ABSTRACT AVAILABLE."
+"FOR AN ABSTRACT OF THIS ARTICLE SEE:."
+"2SEE1 PREVIOUS ABSTRACT."
+Also, there are 28 documents with title "ZZZZ."
+I realized this by searching for documents with identical title or abstract.
+I decided to ignore this issues, since it would require manual fixing.
+
+
+
